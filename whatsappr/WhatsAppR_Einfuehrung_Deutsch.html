@@ -88,14 +88,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2>Einbinden von WhatsAppR und weiteren benötigten Packages</h2>
 <p>Das <strong>WhatsAppR</strong>-package kann von <a href="https://github.com/BorisLS/WhatsAppR">github</a> installiert werden. Hierfür wird die Funktion <code>install_github</code> aus dem <a href="https://cran.r-project.org/web/packages/devtools/index.html">devtools</a>-Package verwendet.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">&quot;BorisLS/WhatsAppR&quot;</span>, <span class="dt">force =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<pre><code>## Downloading GitHub repo BorisLS/WhatsAppR@master
-## from URL https://api.github.com/repos/BorisLS/WhatsAppR/zipball/master</code></pre>
-<pre><code>## Installing WhatsAppR</code></pre>
-<pre><code>## &quot;C:/PROGRA~1/R/R-33~1.1/bin/x64/R&quot; --no-site-file --no-environ --no-save  \
-##   --no-restore --quiet CMD INSTALL  \
-##   &quot;C:/Users/borsl/AppData/Local/Temp/Rtmpk1CBSA/devtools21f856c11cdb/BorisLS-WhatsAppR-d619700&quot;  \
-##   --library=&quot;C:/Users/borsl/Documents/R/win-library/3.3&quot; --install-tests</code></pre>
-<pre><code>## </code></pre>
 <p>Im Anschluss kann <strong>WhatsAppR</strong> in R eingebunden werden. Es wird empfohlen zusätzlich auf das <a href="https://cran.r-project.org/web/packages/dplyr/index.html">dplyr</a>-Package einzubinden.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(WhatsAppR)
 <span class="kw">library</span>(dplyr)</code></pre></div>
