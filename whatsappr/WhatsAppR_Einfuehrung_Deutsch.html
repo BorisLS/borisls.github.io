@@ -12,7 +12,7 @@
 
 <meta name="author" content="Boris Luetke Schelhowe" />
 
-<meta name="date" content="2017-01-28" />
+<meta name="date" content="2017-01-29" />
 
 <title>WhatsAppR: Analyse von WhatsApp Chatverläufen</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">WhatsAppR: Analyse von WhatsApp Chatverläufen</h1>
 <h4 class="author"><em>Boris Luetke Schelhowe</em></h4>
-<h4 class="date"><em>2017-01-28</em></h4>
+<h4 class="date"><em>2017-01-29</em></h4>
 
 
 
@@ -87,7 +87,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="einbinden-von-whatsappr-und-weiteren-benotigten-packages" class="section level2">
 <h2>Einbinden von WhatsAppR und weiteren benötigten Packages</h2>
 <p>Das <strong>WhatsAppR</strong>-package kann von <a href="https://github.com/BorisLS/WhatsAppR">github</a> installiert werden. Hierfür wird die Funktion <code>install_github</code> aus dem <a href="https://cran.r-project.org/web/packages/devtools/index.html">devtools</a>-Package verwendet.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">&quot;BorisLS/WhatsAppR&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">&quot;BorisLS/WhatsAppR&quot;</span>, <span class="dt">force =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre><code>## Downloading GitHub repo BorisLS/WhatsAppR@master
+## from URL https://api.github.com/repos/BorisLS/WhatsAppR/zipball/master</code></pre>
+<pre><code>## Installing WhatsAppR</code></pre>
+<pre><code>## &quot;C:/PROGRA~1/R/R-33~1.1/bin/x64/R&quot; --no-site-file --no-environ --no-save  \
+##   --no-restore --quiet CMD INSTALL  \
+##   &quot;C:/Users/borsl/AppData/Local/Temp/Rtmpk1CBSA/devtools21f856c11cdb/BorisLS-WhatsAppR-d619700&quot;  \
+##   --library=&quot;C:/Users/borsl/Documents/R/win-library/3.3&quot; --install-tests</code></pre>
+<pre><code>## </code></pre>
 <p>Im Anschluss kann <strong>WhatsAppR</strong> in R eingebunden werden. Es wird empfohlen zusätzlich auf das <a href="https://cran.r-project.org/web/packages/dplyr/index.html">dplyr</a>-Package einzubinden.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(WhatsAppR)
 <span class="kw">library</span>(dplyr)</code></pre></div>
@@ -96,13 +104,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2>Importieren von WhatsApp-Chatverläufen</h2>
 <p>Die Funktion <code>wapp_import</code> wird verwendet um den Chatverlauf zu importieren. Für die Funktion werden drei Input-Parameter erwartet:</p>
 <ul>
-<li><code>history</code> Dateipfad mit dem Chatverlauf als txt-Datei<br />
-</li>
+<li><code>history</code> Dateipfad mit dem Chatverlauf als txt-Datei</li>
+<li><code>os</code> Endweder ‘iOS’ oder ‘android’</li>
 <li><code>language</code> Sprache der Systemeinstellung. Aktuell wird nur Deutsch ‘de’ unterstützt.<br />
 </li>
 <li><code>techuser</code> Der Chatverlauf enthält verschiedene Systemnachrichten, z.B. wenn ein Chatmitglied in einem Gruppenchat hinzugefüght wurde. Es wird empfohlen diese Nachrichten aus den Analysen auszuschließen und die Einstellung <code>techuser = FALSE</code> zu wählen.</li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">test_chat &lt;-<span class="st"> </span><span class="kw">wapp_import</span>(<span class="dt">history =</span> <span class="st">'C:/WhatsApp Chat mit Test-Chat.txt'</span>,
+                         <span class="dt">os =</span> <span class="st">'android'</span>,
                          <span class="dt">language =</span> <span class="st">'de'</span>,
                          <span class="dt">techuser =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p>Im Ergebnis ergibt sich nach dem Import das Dataframe <code>test_chat</code> mit sieben Spalten:</p>
