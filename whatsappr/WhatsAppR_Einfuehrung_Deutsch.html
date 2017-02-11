@@ -12,7 +12,7 @@
 
 <meta name="author" content="Boris Luetke Schelhowe" />
 
-<meta name="date" content="2017-01-29" />
+<meta name="date" content="2017-02-11" />
 
 <title>WhatsAppR: Analyse von WhatsApp Chatverläufen</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">WhatsAppR: Analyse von WhatsApp Chatverläufen</h1>
 <h4 class="author"><em>Boris Luetke Schelhowe</em></h4>
-<h4 class="date"><em>2017-01-29</em></h4>
+<h4 class="date"><em>2017-02-11</em></h4>
 
 
 
@@ -86,9 +86,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="einbinden-von-whatsappr-und-weiteren-benotigten-packages" class="section level2">
 <h2>Einbinden von WhatsAppR und weiteren benötigten Packages</h2>
-<p>Das <strong>WhatsAppR</strong>-package kann von <a href="https://github.com/BorisLS/WhatsAppR">github</a> installiert werden. Hierfür wird die Funktion <code>install_github</code> aus dem <a href="https://cran.r-project.org/web/packages/devtools/index.html">devtools</a>-Package verwendet.</p>
+<p>Das <strong>WhatsAppR</strong>-package kann von <a href="https://github.com/BorisLS/WhatsAppR">github</a> installiert werden. Hierfür wird die Funktion <code>install_github</code> aus dem <a href="https://cran.r-project.org/web/packages/devtools/index.html">devtools</a>-Package verwendet. Dieses muss entsprechend installiert sein. Neben <code>devtools</code> ist es notwendig, dass die weiteren Packages <code>stringr</code>, <code>readr</code> und <code>lubridate</code> installiert sind.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools::<span class="kw">install_github</span>(<span class="st">&quot;BorisLS/WhatsAppR&quot;</span>, <span class="dt">force =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p>Im Anschluss kann <strong>WhatsAppR</strong> in R eingebunden werden. Es wird empfohlen zusätzlich auf das <a href="https://cran.r-project.org/web/packages/dplyr/index.html">dplyr</a>-Package einzubinden.</p>
+<p>Im Anschluss kann <strong>WhatsAppR</strong> in R eingebunden werden. Es wird empfohlen zusätzlich auch das <a href="https://cran.r-project.org/web/packages/dplyr/index.html">dplyr</a>-Package einzubinden.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(WhatsAppR)
 <span class="kw">library</span>(dplyr)</code></pre></div>
 </div>
