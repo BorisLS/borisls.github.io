@@ -1,0 +1,17 @@
+---
+title: "Neustart mit Hugo und Blogdown"
+author: "BorisLS"
+date: 2017-08-20
+categories: ["R"]
+tags: ["blogdown"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+# Neustart mit Hugo und Blogdown
+
+Manchmal benötigt man einen kleinen Anschub damit man am Ball zu bleiben. So ging es mir in der letzten Zeit mit diesem Blog. Ich habe einige Sachen in R ausprobiert, allerdings nicht die Motivation gefunden diese auch in dem Blog niederzuschreiben. 
+
+Der Anschub für diesen Blog ist das [blogdown-Package](https://github.com/rstudio/blogdown) von Xie Yihui. Nun läuft dieser Blog über [Hugo](https://gohugo.io/) und kann direkt mit [RStudio](https://www.rstudio.com/) verwaltet werden. Details zu der erstmaligen Einrichtung folgen noch.
