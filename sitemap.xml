@@ -3,57 +3,68 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/2017/08/20/2017-08-20-umzug-blogdown/</loc>
+    <loc>https://borisls.github.io/2017/09/01/2017-09-01-webscraping-fussball/</loc>
+    <lastmod>2017-09-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://borisls.github.io/2017/08/20/2017-08-20-umzug-blogdown/</loc>
     <lastmod>2017-08-20T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/project/2017-08-20-whatsappr-intro/</loc>
+    <loc>https://borisls.github.io/project/2017-08-20-whatsappr-intro/</loc>
     <lastmod>2017-08-20T00:00:00+02:00</lastmod>
   </url>
   
   <url>
-    <loc>/page/about/</loc>
+    <loc>https://borisls.github.io/page/about/</loc>
     <lastmod>2015-04-03T02:13:50+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/page/contact/</loc>
+    <loc>https://borisls.github.io/page/contact/</loc>
     <lastmod>2015-04-03T02:13:50+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/</loc>
+    <loc>https://borisls.github.io/</loc>
+    <lastmod>2017-09-01T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://borisls.github.io/tags/blogdown/</loc>
     <lastmod>2017-08-20T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/blogdown/</loc>
-    <lastmod>2017-08-20T00:00:00+00:00</lastmod>
+    <loc>https://borisls.github.io/tags/fu%C3%9Fball/</loc>
+    <lastmod>2017-09-01T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/page/</loc>
+    <loc>https://borisls.github.io/page/</loc>
     <lastmod>2015-04-03T02:13:50+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/post/</loc>
-    <lastmod>2017-08-20T00:00:00+00:00</lastmod>
+    <loc>https://borisls.github.io/post/</loc>
+    <lastmod>2017-09-01T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/project/</loc>
+    <loc>https://borisls.github.io/project/</loc>
     <lastmod>2017-08-20T00:00:00+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/</loc>
+    <loc>https://borisls.github.io/tags/</loc>
     <lastmod>2017-08-20T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>

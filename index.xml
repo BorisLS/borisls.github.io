@@ -2,42 +2,52 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Blog von Boris Luetke Schelhowe</title>
-    <link>/</link>
+    <link>https://borisls.github.io/</link>
     <description>Recent content on Blog von Boris Luetke Schelhowe</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Boris Luetke Schelhowe</copyright>
-    <lastBuildDate>Sun, 20 Aug 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 01 Sep 2017 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://borisls.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Web Scraping von Fußballergebnissen mit R und rvest</title>
+      <link>https://borisls.github.io/2017/09/01/2017-09-01-webscraping-fussball/</link>
+      <pubDate>Fri, 01 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://borisls.github.io/2017/09/01/2017-09-01-webscraping-fussball/</guid>
+      <description>Web Scraping von Fußballergebnissen mit R und rvestUse CaseFür das trainieren von Vorhersagemodellen werden Daten benötigt. Eine Möglichkeit für die Generierung von Daten ist das sogenannte Web Scraping bzw. Web Data Harvesting. Hierbei werden Daten von Websites extrahiert und in ein “maschinen-freundliches” Format lokal zur Verfügung gestellt.
+Für Python gibt es für diese Aufgabe die library BeautifulSoup und für R existiert u.a. das Package rvest. In diesem Beitrag wird eine praktische Anwendung von rvest dargestellt.</description>
+    </item>
+    
+    <item>
       <title>Neustart mit Hugo und Blogdown</title>
-      <link>/2017/08/20/2017-08-20-umzug-blogdown/</link>
+      <link>https://borisls.github.io/2017/08/20/2017-08-20-umzug-blogdown/</link>
       <pubDate>Sun, 20 Aug 2017 00:00:00 +0000</pubDate>
       
-      <guid>/2017/08/20/2017-08-20-umzug-blogdown/</guid>
+      <guid>https://borisls.github.io/2017/08/20/2017-08-20-umzug-blogdown/</guid>
       <description>Neustart mit Hugo und BlogdownManchmal benötigt man einen kleinen Anschub damit man am Ball zu bleiben. So ging es mir in der letzten Zeit mit diesem Blog. Ich habe einige Sachen in R ausprobiert, allerdings nicht die Motivation gefunden diese auch in dem Blog niederzuschreiben.
 Der Anschub für diesen Blog ist das blogdown-Package von Xie Yihui. Nun läuft dieser Blog über Hugo und kann direkt mit RStudio verwaltet werden. Details zu der erstmaligen Einrichtung folgen noch.</description>
     </item>
     
     <item>
       <title>WhatsAppR</title>
-      <link>/project/2017-08-20-whatsappr-intro/</link>
+      <link>https://borisls.github.io/project/2017-08-20-whatsappr-intro/</link>
       <pubDate>Sun, 20 Aug 2017 00:00:00 +0200</pubDate>
       
-      <guid>/project/2017-08-20-whatsappr-intro/</guid>
+      <guid>https://borisls.github.io/project/2017-08-20-whatsappr-intro/</guid>
       <description>Grundidee Der WhatsApp Messenger ist ein kostenloser, instant messaging Dienst für Smartphones. Dieser Messenger erlaubt es Chatverläufe als txt-Datei zu exportieren. Das WhatsAppR-Package ermöglicht es diese Dateien in R einzulesen. Bei dem Import wird der Chatverlauf aufbereitet, so dass Analysen auf Basis des importierten Verlaufs möglich sind. Einige Analysefunktionen sind bereits im WhatsAppR-Package umgesetzt.
 Aktuell befindet sich das Package noch in der Entwicklung und unterstützt nur die deutsche Sprache.</description>
     </item>
     
     <item>
       <title>About</title>
-      <link>/page/about/</link>
+      <link>https://borisls.github.io/page/about/</link>
       <pubDate>Fri, 03 Apr 2015 02:13:50 +0000</pubDate>
       
-      <guid>/page/about/</guid>
+      <guid>https://borisls.github.io/page/about/</guid>
       <description>Über diesen Blog In diesen Blog geht es um Data Analysis und Stasticial Learning. Meist mit R, aber auch mit anderen Tools. Er behandelt kleinere und größere Projekte die mich in meiner Freizeit beschäftigen.
 Über Mich Mathematiker, Statisker, R-Enthusiast, Python-Beginner, Intermediate-SQler, Läufer, Schwimmer, Radfahrer, Projektmanager, Ex-Kreditrisikocontroller, Ex-Revisor, Neu-Kölner, Ex-Hamburger, (Ex-)Münsteraner
 Profile im Internet Xing: https://www.xing.com/profile/Boris_LuetkeSchelhowe
@@ -46,10 +56,10 @@ Github: https://github.com/BorisLS</description>
     
     <item>
       <title>Contact</title>
-      <link>/page/contact/</link>
+      <link>https://borisls.github.io/page/contact/</link>
       <pubDate>Fri, 03 Apr 2015 02:13:50 +0000</pubDate>
       
-      <guid>/page/contact/</guid>
+      <guid>https://borisls.github.io/page/contact/</guid>
       <description>Contact Aenean ipsum justo, semper eu nisl ut, pretium tincidunt sem. Praesent et diam sit amet lacus lobortis dictum a id lacus. Quisque hendrerit sit amet turpis eu varius. Ut id lorem ac felis ultrices tincidunt. Pellentesque consequat arcu ac fringilla imperdiet. Phasellus pellentesque, sapien non pulvinar blandit, sapien ante aliquet felis, vel porttitor sapien ante in lacus. Fusce non urna aliquet, malesuada nibh vel, luctus urna. Phasellus ut lacus molestie, varius purus quis, malesuada lorem.</description>
     </item>
     

@@ -2,22 +2,31 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Blog von Boris Luetke Schelhowe</title>
-    <link>/tags/</link>
+    <link>https://borisls.github.io/tags/</link>
     <description>Recent content in Tags on Blog von Boris Luetke Schelhowe</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Boris Luetke Schelhowe</copyright>
     <lastBuildDate>Sun, 20 Aug 2017 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://borisls.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Blogdown</title>
-      <link>/tags/blogdown/</link>
+      <link>https://borisls.github.io/tags/blogdown/</link>
       <pubDate>Sun, 20 Aug 2017 00:00:00 +0000</pubDate>
       
-      <guid>/tags/blogdown/</guid>
+      <guid>https://borisls.github.io/tags/blogdown/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Fußball</title>
+      <link>https://borisls.github.io/tags/fu%C3%9Fball/</link>
+      <pubDate>Fri, 01 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://borisls.github.io/tags/fu%C3%9Fball/</guid>
       <description></description>
     </item>
     
