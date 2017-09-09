@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Web Scraping von Fußballergebnissen mit R und rvest &middot; BorisLS</title>
+        <meta name="description" content="Web Scraping von Fußballergebnissen mit R und rvestUse CaseFür das trainieren von Vorhersagemodellen werden Daten benötigt. Eine Möglichkeit für die Generierung von Daten ist das sogenannte Web Scraping bzw. Web Data Harvesting. Hierbei werden Daten von Websites extrahiert und in ein “maschinen-freundliches” Format lokal zur Verfügung gestellt.
+Für Python gibt es für diese Aufgabe die library BeautifulSoup und für R existiert u.a. das Package rvest. In diesem Beitrag wird eine praktische Anwendung von rvest dargestellt.">
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="generator" content="Hugo 0.26" />
+        <meta name="robots" content="index,follow">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta property="og:title" content="Web Scraping von Fußballergebnissen mit R und rvest">
+<meta property="og:description" content="Web Scraping von Fußballergebnissen mit R und rvestUse CaseFür das trainieren von Vorhersagemodellen werden Daten benötigt. Eine Möglichkeit für die Generierung von Daten ist das sogenannte Web Scraping bzw. Web Data Harvesting. Hierbei werden Daten von Websites extrahiert und in ein “maschinen-freundliches” Format lokal zur Verfügung gestellt.
+Für Python gibt es für diese Aufgabe die library BeautifulSoup und für R existiert u.a. das Package rvest. In diesem Beitrag wird eine praktische Anwendung von rvest dargestellt.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://borisls.github.io/2017/09/01/2017-09-01-webscraping-fussball/">
+        <link rel="stylesheet" href="https://borisls.github.io/dist/styles.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin,cyrillic-ext,latin-ext,cyrillic">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+    </head>
+    <body>
+        
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-104968577-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+
+        <div id="wrapper">
+            <header class="site-header">
+                <div class="container">
+                    <div class="site-title-wrapper">
+                        
+                            <h1 class="site-title">
+                                <a title="Blog von Boris Luetke Schelhowe" href="https://borisls.github.io/">Blog von Boris Luetke Schelhowe</a>
+                            </h1>
+                        
+                        <a class="button-square" href="https://borisls.github.io/index.xml"><i class="fa fa-rss"></i></a>
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Github" title="Github" href="https://github.com/borisls">
+                                <i class="fa fa-github-alt"></i>
+                            </a>
+                        
+                        
+                        
+                        
+                        
+                            <a class="button-square button-social hint--top" data-hint="Email" title="Email" href="mailto:boris.luetke.schelhowe@gmail.com">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        
+                    </div>
+
+                    <ul class="site-nav">
+                        
+    <li class="site-nav-item">
+        <a title="Blog" href="/">Blog</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="Projekte" href="/project/">Projekte</a>
+    </li>
+
+    <li class="site-nav-item">
+        <a title="About" href="/page/about/">About</a>
+    </li>
+
+                    </ul>
+                </div>
+            </header>
+
+            <div id="container">
+
+
+<div class="container">
+    <article class="post-container" itemscope="" itemtype="http://schema.org/BlogPosting">
+        <header class="post-header">
+    <h1 class="post-title" itemprop="name headline">Web Scraping von Fußballergebnissen mit R und rvest</h1>
+    
+    <p class="post-date">
+        <span>Published <time datetime="2017-09-01" itemprop="datePublished">2017, September 1</time></span>
+        <span>by</span>
+        <span itemscope="" itemprop="author" itemtype="https://schema.org/Person">
+            <span itemprop="name">
+                <a href="" itemprop="url" rel="author">BorisLS</a>
+            </span>
+        </span>
+    </p>
+</header>
+
+        <div class="post-content clearfix" itemprop="articleBody">
+    
+
+    <div id="web-scraping-von-fuballergebnissen-mit-r-und-rvest" class="section level1">
+<h1>Web Scraping von Fußballergebnissen mit R und rvest</h1>
+<div id="use-case" class="section level2">
+<h2>Use Case</h2>
+<p>Für das trainieren von Vorhersagemodellen werden Daten benötigt. Eine Möglichkeit für die Generierung von Daten ist das sogenannte <a href="https://en.wikipedia.org/wiki/Web_scraping">Web Scraping</a> bzw. Web Data Harvesting. Hierbei werden Daten von Websites extrahiert und in ein “maschinen-freundliches” Format lokal zur Verfügung gestellt.</p>
+<p>Für Python gibt es für diese Aufgabe die library <a href="https://www.crummy.com/software/BeautifulSoup/">BeautifulSoup</a> und für R existiert u.a. das Package <a href="https://cran.r-project.org/web/packages/rvest/index.html">rvest</a>. In diesem Beitrag wird eine praktische Anwendung von <a href="https://cran.r-project.org/web/packages/rvest/index.html">rvest</a> dargestellt. Für eine grundlegende Einführung in <a href="https://cran.r-project.org/web/packages/rvest/index.html">rvest</a> sei an dieser Stelle auf den Beitrag aus dem <a href="auf%20den%20%5B%5D(https://blog.rstudio.com/2014/11/24/rvest-easy-web-scraping-with-r/)">RStudio-Blog</a> und den Beitrag bei <a href="https://www.analyticsvidhya.com/blog/2017/03/beginners-guide-on-web-scraping-in-r-using-rvest-with-hands-on-knowledge/">Analytics Vidhya</a> verwiesen.</p>
+<p>Ziel ist es, eine Funktion zu schreiben die zu einer vorgegebenen Kombination aus europäischer Top-Fußball-Liga, Spieltag und Saison die Ergebnisse der jeweiligen Partien herunterlädt. Datenquelle soll die Seite der <a href="http://m.sportschau.de">Sportschau</a> sein.</p>
+</div>
+<div id="losungsdesign" class="section level2">
+<h2>Lösungsdesign</h2>
+<p>Folgende Packages werden für den Import und die Aufbereitung der Daten verwendet.</p>
+<pre class="r"><code>library(dplyr)
+library(rvest)
+library(stringr)</code></pre>
+<p>Als Bestandteil des Lösungsdesign werden verschiedenen Funktionen verwendet. Die Hauptfunktion ist <code>get_matchday_results</code>. Diese Funktion lädt mit rvest die zu einer vorgegebenen Kombination aus Liga (Bundesliga, Premier League, Primera Division, Serie A), Spieltag und Saison die Ergebnisse herunter. Hierfür werden verschiedene Hilfsfunktionen verwendet. Die Funktion <code>create_matchday_url</code> erstellt die für die angegebene Kombination die Internetadresse der Sportschau-Seite, auf der die Ergebnisse angezeigt werden.</p>
+<p>Nachfolgend werden die einzelnen Funktionen aufgeführt. Zu Beginn wird die Hilfsfunktion <code>create_matchday_url</code> definiert. Sie setzt die URL für die angegebene Liga-Spieltag-Saison-Kombination zusammen. Die aufgerufene Seite ist die Datenquelle für die Extraktion. Es wird die mobile Seite der Sportschau aufgerufen, da diese weniger Informationen beinhaltet und leichter auszulesen ist.</p>
+<pre class="r"><code>create_matchday_url &lt;- function(league, matchday, season){
+  
+  # Setzen der Abkürzung in Abhängigkeit
+  if(league==&quot;Premier League&quot;){
+    league.id &lt;- &quot;ENG&quot;
+  } else if(league == &quot;Bundesliga&quot;){
+    league.id &lt;- &quot;BL1&quot;
+  } else if(league == &quot;Primera Division&quot;){
+    league.id &lt;- &quot;SPA&quot;
+  } else if(league == &quot;Serie A&quot;){
+    league.id &lt;- &quot;ITA&quot;
+  }
+  
+  link &lt;- paste0(&quot;http://m.sportschau.de/SportschauMobil/web/results/fb/&quot;,
+                  league.id,&quot;/&quot;,
+                  season, &quot;/1/&quot;,
+                  matchday,&quot;?sportart=Fußball&quot;)
+  return(link)
+}</code></pre>
+<p>Bei dem Web Scraping kann es manchmal sein, dass bestimmte Zeichen aus dem heruntergeladenen String entfernt werden sollen. Dies erfolgt mit der Hilfsfunktionen <code>trim_line_sportschau</code> und <code>replace_character</code></p>
+<pre class="r"><code>trim_line_sportschau &lt;- function(line){
+  line &lt;- str_replace_all(line, &quot;\t&quot;, &quot;&quot;)
+  line &lt;- str_replace_all(line, &quot;\n&quot;, &quot;&quot;)
+  line &lt;- str_trim(line)
+  return(line)
+}
+
+replace_character &lt;- function(x){
+  x &lt;- str_replace(string = x, &quot;Ã¼&quot;, &quot;ü&quot;)
+  x &lt;- str_replace(string = x, &quot;Ã¶&quot;, &quot;ö&quot;)
+  return(x)
+}</code></pre>
+<p>Die Funktion <code>get_matchday_results</code> lädt die Ergebnisse zu einer vorgegebenen Liga-Spieltag-Saison-Kombination von der <a href="http://m.sportschau.de">Sportschau</a>. Die Funktion lädt zuerst die relevante Seite mit <code>read_html</code> herunter. Die Seite ist mit verschiedenen CSS-Tags versehen (z.B. <code>&lt;div class=&quot;begegnung&quot;&gt;</code>und <code>&lt;div class=&quot;mannschaften&quot;&gt;</code>. Das <a href="https://cran.r-project.org/web/packages/rvest/index.html">rvest</a> Package nutzt diese Informationen um die entsprechenden Inhalte auszulesen. Im Anschluss werden die Ergebnisse in ein Dataframe mit den Spalten league, matchday, season, team.home, team.away, goals.home und goals.away Dataframe konvertiert.</p>
+<pre class="r"><code>get_matchday_results &lt;- function(league, matchday, season){
+
+  # Rohdaten mit rvest
+  url &lt;- create_matchday_url(league, matchday, season)
+  matchday.page &lt;- read_html(url, encoding = &quot;UTF-8&quot;)
+  
+  matches  &lt;- matchday.page %&gt;% 
+              html_nodes(&quot;.begegnung&quot;) %&gt;% 
+              html_nodes(&quot;.mannschaften&quot;) %&gt;% 
+              html_text()
+
+  results &lt;- matchday.page %&gt;% 
+             html_nodes(&quot;.begegnung&quot;) %&gt;% 
+             html_nodes(&quot;.ergebnis&quot;) %&gt;% 
+             html_text()
+  
+  nr.matches &lt;- length(matches)
+  
+  # data processing
+  matchday.results &lt;- data.frame(league = rep(league, nr.matches),
+                                 matchday = rep(matchday, nr.matches),
+                                 season = rep(season, nr.matches),
+                                 team.home = rep(&quot;Unknown&quot;, nr.matches),
+                                 team.away = rep(&quot;Unknown&quot;,nr.matches), 
+                                 goals.home = rep(-1, nr.matches),
+                                 goals.away = rep(-1, nr.matches),
+                                 stringsAsFactors=FALSE)
+  
+  for(i in 1:nr.matches){
+    
+    match &lt;- trim_line_sportschau(line = as.character(matches[i]))
+    match &lt;- unlist(str_split(match, &quot;:&quot;))
+    matchday.results[i, &quot;team.home&quot;] &lt;- str_trim(match[1])
+    matchday.results[i, &quot;team.away&quot;] &lt;- str_trim(match[2])
+    
+    result &lt;- trim_line_sportschau(line = as.character(results[i]))
+    result &lt;- unlist(str_split(result, &quot;:&quot;))
+    matchday.results[i, &quot;goals.home&quot;] &lt;- str_trim(result[1])
+    matchday.results[i, &quot;goals.away&quot;] &lt;- str_trim(result[2])
+      
+  }
+  
+  # Formatierungen
+  matchday.results &lt;- matchday.results %&gt;%
+                      mutate(team.home  = replace_character(team.home),
+                             team.away  = replace_character(team.away),
+                             goals.home = ifelse(goals.home == &quot;-&quot;,
+                                                 NA, as.integer(goals.home)),
+                             goals.away = ifelse(goals.home == &quot;-&quot;,
+                                                 NA, as.integer(goals.away)))
+  
+  return(matchday.results)
+}</code></pre>
+<p>Die Funktion <code>get_league_results</code> dient der Bequemlichkeit und lädt alle Ergebnisse bis zu einem vorgegebenen Spieltag <code>played</code> herunter. Hierbei wird mit der Funktion <code>Sys.sleep</code> eine kleine, zufällige Verzögerung eingebaut, um nicht negativ bei Sportschau.de aufzufallen.</p>
+<pre class="r"><code>get_league_results &lt;- function(league, played, season){
+  
+    league.results &lt;- data.frame(league = rep(league, 500),
+                                 matchday = rep(0, 500),
+                                 season = rep(season, 500),
+                                 team.home = rep(&quot;Unknown&quot;, 500),
+                                 team.away = rep(&quot;Unknown&quot;, 500), 
+                                 goals.home = rep(-1, 500),
+                                 goals.away = rep(-1, 500),
+                                 stringsAsFactors=FALSE)
+    j &lt;- 0
+    for(i in 1:played){
+      
+      # Sys.Sleep
+      Sys.sleep(sample(seq(1, 2, by=0.2), 1))
+      
+      # Download Spieltag
+      df &lt;- get_matchday_results(league, i, season)
+      nr.matches &lt;- dim(df)[1]
+      league.results[(j+1):(j+nr.matches), ] &lt;- df
+      j &lt;- j + nr.matches
+    }
+    
+    league.results &lt;- league.results %&gt;%
+                      filter(matchday != 0)
+  
+    return(league.results)
+}</code></pre>
+</div>
+<div id="anwendung" class="section level2">
+<h2>Anwendung</h2>
+<p>Exemplarisch werden die Ergebnisse der Funktion <code>get_matchday_results</code> für verschiedene Liga-Spieltag-Saison-Kombinationen dargestellt.</p>
+<pre class="r"><code>get_matchday_results(&quot;Bundesliga&quot;, 8, 2017) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">league</th>
+<th align="right">matchday</th>
+<th align="right">season</th>
+<th align="left">team.home</th>
+<th align="left">team.away</th>
+<th align="right">goals.home</th>
+<th align="right">goals.away</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Bundesliga</td>
+<td align="right">8</td>
+<td align="right">2017</td>
+<td align="left">Hamburger SV</td>
+<td align="left">E. Frankfurt</td>
+<td align="right">0</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">Bundesliga</td>
+<td align="right">8</td>
+<td align="right">2017</td>
+<td align="left">B. Leverkusen</td>
+<td align="left">Hoffenheim</td>
+<td align="right">0</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td align="left">Bundesliga</td>
+<td align="right">8</td>
+<td align="right">2017</td>
+<td align="left">Hertha BSC</td>
+<td align="left">1. FC Köln</td>
+<td align="right">2</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">Bundesliga</td>
+<td align="right">8</td>
+<td align="right">2017</td>
+<td align="left">FC Ingolstadt</td>
+<td align="left">Bor. Dortmund</td>
+<td align="right">3</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td align="left">Bundesliga</td>
+<td align="right">8</td>
+<td align="right">2017</td>
+<td align="left">Darmstadt 98</td>
+<td align="left">VfL Wolfsburg</td>
+<td align="right">3</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">Bundesliga</td>
+<td align="right">8</td>
+<td align="right">2017</td>
+<td align="left">SC Freiburg</td>
+<td align="left">FC Augsburg</td>
+<td align="right">2</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Bundesliga</td>
+<td align="right">8</td>
+<td align="right">2017</td>
+<td align="left">Bay. München</td>
+<td align="left">B. M´gladbach</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Bundesliga</td>
+<td align="right">8</td>
+<td align="right">2017</td>
+<td align="left">RB Leipzig</td>
+<td align="left">Werder Bremen</td>
+<td align="right">3</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Bundesliga</td>
+<td align="right">8</td>
+<td align="right">2017</td>
+<td align="left">FC Schalke 04</td>
+<td align="left">FSV Mainz 05</td>
+<td align="right">3</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p>Auch historisches Daten der Bundesliga ab der Saison 2007/2008 können so abgefragt werden.</p>
+<pre class="r"><code>get_matchday_results(&quot;Bundesliga&quot;, 6, 2008) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">league</th>
+<th align="right">matchday</th>
+<th align="right">season</th>
+<th align="left">team.home</th>
+<th align="left">team.away</th>
+<th align="right">goals.home</th>
+<th align="right">goals.away</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Bundesliga</td>
+<td align="right">6</td>
+<td align="right">2008</td>
+<td align="left">VfL Bochum</td>
+<td align="left">E. Frankfurt</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Bundesliga</td>
+<td align="right">6</td>
+<td align="right">2008</td>
+<td align="left">Werder Bremen</td>
+<td align="left">VfB Stuttgart</td>
+<td align="right">4</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Bundesliga</td>
+<td align="right">6</td>
+<td align="right">2008</td>
+<td align="left">FC Schalke 04</td>
+<td align="left">A. Bielefeld</td>
+<td align="right">3</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Bundesliga</td>
+<td align="right">6</td>
+<td align="right">2008</td>
+<td align="left">Hamburger SV</td>
+<td align="left">1.FC Nürnberg</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Bundesliga</td>
+<td align="right">6</td>
+<td align="right">2008</td>
+<td align="left">Hertha BSC</td>
+<td align="left">Bor. Dortmund</td>
+<td align="right">3</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">Bundesliga</td>
+<td align="right">6</td>
+<td align="right">2008</td>
+<td align="left">Ener. Cottbus</td>
+<td align="left">VfL Wolfsburg</td>
+<td align="right">1</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">Bundesliga</td>
+<td align="right">6</td>
+<td align="right">2008</td>
+<td align="left">Hansa Rostock</td>
+<td align="left">MSV Duisburg</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Bundesliga</td>
+<td align="right">6</td>
+<td align="right">2008</td>
+<td align="left">Karlsruher SC</td>
+<td align="left">Bay. München</td>
+<td align="right">1</td>
+<td align="right">4</td>
+</tr>
+<tr class="odd">
+<td align="left">Bundesliga</td>
+<td align="right">6</td>
+<td align="right">2008</td>
+<td align="left">Hannover 96</td>
+<td align="left">B. Leverkusen</td>
+<td align="right">0</td>
+<td align="right">3</td>
+</tr>
+</tbody>
+</table>
+<p>Ebenfalls können auch ausländische Ligen heruntergeladen werden.</p>
+<pre class="r"><code>get_matchday_results(&quot;Premier League&quot;, 8, 2017) %&gt;%
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">league</th>
+<th align="right">matchday</th>
+<th align="right">season</th>
+<th align="left">team.home</th>
+<th align="left">team.away</th>
+<th align="right">goals.home</th>
+<th align="right">goals.away</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Premier League</td>
+<td align="right">8</td>
+<td align="right">2017</td>
+<td align="left">FC Chelsea</td>
+<td align="left">Leicester</td>
+<td align="right">3</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Premier League</td>
+<td align="right">8</td>
+<td align="right">2017</td>
+<td align="left">AFC Bournem.</td>
+<td align="left">Hull City</td>
+<td align="right">6</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Premier League</td>
+<td align="right">8</td>
+<td align="right">2017</td>
+<td align="left">FC Arsenal</td>
+<td align="left">Swansea City</td>
+<td align="right">3</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">Premier League</td>
+<td align="right">8</td>
+<td align="right">2017</td>
+<td align="left">Manchester C.</td>
+<td align="left">FC Everton</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Premier League</td>
+<td align="right">8</td>
+<td align="right">2017</td>
+<td align="left">Stoke City</td>
+<td align="left">AFC Sunderl.</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Premier League</td>
+<td align="right">8</td>
+<td align="right">2017</td>
+<td align="left">West Bromwich</td>
+<td align="left">Tottenham</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Premier League</td>
+<td align="right">8</td>
+<td align="right">2017</td>
+<td align="left">Crystal Pal.</td>
+<td align="left">West Ham Utd.</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">Premier League</td>
+<td align="right">8</td>
+<td align="right">2017</td>
+<td align="left">Middlesbrough</td>
+<td align="left">FC Watford</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Premier League</td>
+<td align="right">8</td>
+<td align="right">2017</td>
+<td align="left">Southampton</td>
+<td align="left">FC Burnley</td>
+<td align="right">3</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">Premier League</td>
+<td align="right">8</td>
+<td align="right">2017</td>
+<td align="left">FC Liverpool</td>
+<td align="left">Manchester U.</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p>Sollen dagegen nicht nur einzelne Spieltage, sondern alle Ergebnisse bis zu einem Spieltag heruntergeladen werden, so kann die Funktion <code>get_league_results</code> zum Einsatz kommen. Mit dem unten stehenden Code werden alle Ergebnisse der Bundesliga Saison 2016/2017 heruntergeladen und anschließend als csv-Datei exportiert.</p>
+<pre class="r"><code>get_league_results(&quot;Bundesliga&quot;, 34, 2017) %&gt;%
+  write.table(&quot;bundesliga-ergebnisse-2017.csv&quot;, sep = &#39;;&#39;, dec = &#39;,&#39;, row.names = FALSE)</code></pre>
+</div>
+</div>
+
+</div>
+
+        <footer class="post-footer clearfix">
+    
+        <p class="post-tags">
+            <span>Tagged:</span>
+            
+            
+                <a href="/tags/fu%C3%9Fball/">Fußball</a>
+            
+        </p>
+    
+
+    <div class="share">
+        
+            <a class="icon-twitter" href="https://twitter.com/share?text=Web%20Scraping%20von%20Fu%c3%9fballergebnissen%20mit%20R%20und%20rvest&url=https%3a%2f%2fborisls.github.io%2f2017%2f09%2f01%2f2017-09-01-webscraping-fussball%2f"
+                onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                <i class="fa fa-twitter"></i>
+                <span class="hidden">Twitter</span>
+            </a>
+        
+
+        
+            <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fborisls.github.io%2f2017%2f09%2f01%2f2017-09-01-webscraping-fussball%2f"
+                onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                <i class="fa fa-facebook"></i>
+                <span class="hidden">Facebook</span>
+            </a>
+        
+
+        
+            <a class="icon-google-plus" href="https://plus.google.com/share?url=https%3a%2f%2fborisls.github.io%2f2017%2f09%2f01%2f2017-09-01-webscraping-fussball%2f"
+              onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+              <i class="fa fa-google-plus"></i>
+                <span class="hidden">Google+</span>
+            </a>
+        
+        
+    </div>
+</footer>
+
+        
+    </article>
+</div>
+
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="site-title-wrapper">
+                    <h1 class="site-title">
+                        <a title="Blog von Boris Luetke Schelhowe" href="https://borisls.github.io/">Blog von Boris Luetke Schelhowe</a>
+                    </h1>
+                    <a class="button-square button-jump-top js-jump-top" href="#">
+                        <i class="fa fa-angle-up"></i>
+                    </a>
+                </div>
+
+                <p class="footer-copyright">
+                    <span>&copy; 2017 / Powered by <a href="https://gohugo.io/">Hugo</a></span>
+                </p>
+                <p class="footer-copyright">
+                    <span><a href="https://github.com/roryg/ghostwriter">Ghostwriter theme</a> By <a href="http://jollygoodthemes.com">JollyGoodThemes</a></span>
+                    <span>/ <a href="https://github.com/jbub/ghostwriter">Ported</a> to Hugo By <a href="https://github.com/jbub">jbub</a></span>
+                </p>
+            </div>
+        </footer>
+
+        <script src="https://borisls.github.io/js/jquery-1.11.3.min.js"></script>
+        <script src="https://borisls.github.io/js/jquery.fitvids.js"></script>
+        
+        
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        
+        
+        <script src="https://borisls.github.io/js/scripts.js"></script>
+    </body>
+</html>
+

@@ -1,0 +1,198 @@
+---
+title: "Web Scraping von Fußballergebnissen mit R und rvest"
+author: "BorisLS"
+date: 2017-09-01
+categories: ["R"]
+tags: ["Fußball"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+# Web Scraping von Fußballergebnissen mit R und rvest
+
+## Use Case
+
+Für das trainieren von Vorhersagemodellen werden Daten benötigt. Eine Möglichkeit für die Generierung von Daten ist das sogenannte [Web Scraping](https://en.wikipedia.org/wiki/Web_scraping) bzw. Web Data Harvesting. Hierbei werden Daten von Websites extrahiert und in ein "maschinen-freundliches" Format lokal zur Verfügung gestellt.
+
+Für Python gibt es für diese Aufgabe die library [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/) und für R existiert u.a. das Package [rvest](https://cran.r-project.org/web/packages/rvest/index.html). In diesem Beitrag wird eine praktische Anwendung von [rvest](https://cran.r-project.org/web/packages/rvest/index.html) dargestellt. Für eine grundlegende Einführung in [rvest](https://cran.r-project.org/web/packages/rvest/index.html) sei an dieser Stelle auf den Beitrag aus dem [RStudio-Blog](auf den [](https://blog.rstudio.com/2014/11/24/rvest-easy-web-scraping-with-r/)) und den Beitrag bei [Analytics Vidhya](https://www.analyticsvidhya.com/blog/2017/03/beginners-guide-on-web-scraping-in-r-using-rvest-with-hands-on-knowledge/) verwiesen.
+
+Ziel ist es, eine Funktion zu schreiben die zu einer vorgegebenen Kombination aus europäischer Top-Fußball-Liga, Spieltag und Saison die Ergebnisse der jeweiligen Partien herunterlädt. Datenquelle soll die Seite der [Sportschau](http://m.sportschau.de) sein.
+
+
+## Lösungsdesign
+
+Folgende Packages werden für den Import und die Aufbereitung der Daten verwendet.
+
+```{r, message = FALSE, error = FALSE, warning = FALSE}
+library(dplyr)
+library(rvest)
+library(stringr)
+```
+
+Als Bestandteil des Lösungsdesign werden verschiedenen Funktionen verwendet. Die Hauptfunktion ist `get_matchday_results`. Diese Funktion lädt mit rvest die zu einer vorgegebenen Kombination aus Liga (Bundesliga, Premier League, Primera Division, Serie A), Spieltag und Saison die Ergebnisse herunter. Hierfür werden verschiedene Hilfsfunktionen verwendet. Die Funktion `create_matchday_url` erstellt die für die angegebene Kombination die Internetadresse der Sportschau-Seite, auf der die Ergebnisse angezeigt werden.
+
+Nachfolgend werden die einzelnen Funktionen aufgeführt. Zu Beginn wird die Hilfsfunktion `create_matchday_url` definiert. Sie setzt die URL für die angegebene Liga-Spieltag-Saison-Kombination zusammen. Die aufgerufene Seite ist die Datenquelle für die Extraktion. Es wird die mobile Seite der Sportschau aufgerufen, da diese weniger Informationen beinhaltet und leichter auszulesen ist.
+
+```{r}
+create_matchday_url <- function(league, matchday, season){
+  
+  # Setzen der Abkürzung in Abhängigkeit
+  if(league=="Premier League"){
+    league.id <- "ENG"
+  } else if(league == "Bundesliga"){
+    league.id <- "BL1"
+  } else if(league == "Primera Division"){
+    league.id <- "SPA"
+  } else if(league == "Serie A"){
+    league.id <- "ITA"
+  }
+  
+  link <- paste0("http://m.sportschau.de/SportschauMobil/web/results/fb/",
+                  league.id,"/",
+                  season, "/1/",
+                  matchday,"?sportart=Fußball")
+  return(link)
+}
+```
+
+Bei dem Web Scraping kann es manchmal sein, dass bestimmte Zeichen aus dem heruntergeladenen String entfernt werden sollen. Dies erfolgt mit der Hilfsfunktionen `trim_line_sportschau` und `replace_character`
+
+```{r}
+trim_line_sportschau <- function(line){
+  line <- str_replace_all(line, "\t", "")
+  line <- str_replace_all(line, "\n", "")
+  line <- str_trim(line)
+  return(line)
+}
+
+replace_character <- function(x){
+  x <- str_replace(string = x, "Ã¼", "ü")
+  x <- str_replace(string = x, "Ã¶", "ö")
+  return(x)
+}
+```
+
+Die Funktion `get_matchday_results` lädt die Ergebnisse zu einer vorgegebenen Liga-Spieltag-Saison-Kombination von der [Sportschau](http://m.sportschau.de). Die Funktion lädt zuerst die relevante Seite mit `read_html` herunter. Die Seite ist mit verschiedenen CSS-Tags versehen (z.B. `<div class="begegnung">`und `<div class="mannschaften">`. Das  [rvest](https://cran.r-project.org/web/packages/rvest/index.html) Package nutzt diese Informationen um die entsprechenden Inhalte auszulesen. Im Anschluss werden die Ergebnisse in ein Dataframe mit den Spalten league, matchday, season, team.home, team.away, goals.home und goals.away Dataframe konvertiert.
+
+```{r}
+get_matchday_results <- function(league, matchday, season){
+
+  # Rohdaten mit rvest
+  url <- create_matchday_url(league, matchday, season)
+  matchday.page <- read_html(url, encoding = "UTF-8")
+  
+  matches  <- matchday.page %>% 
+              html_nodes(".begegnung") %>% 
+              html_nodes(".mannschaften") %>% 
+              html_text()
+
+  results <- matchday.page %>% 
+             html_nodes(".begegnung") %>% 
+             html_nodes(".ergebnis") %>% 
+             html_text()
+  
+  nr.matches <- length(matches)
+  
+  # data processing
+  matchday.results <- data.frame(league = rep(league, nr.matches),
+                                 matchday = rep(matchday, nr.matches),
+                                 season = rep(season, nr.matches),
+                                 team.home = rep("Unknown", nr.matches),
+                                 team.away = rep("Unknown",nr.matches), 
+                                 goals.home = rep(-1, nr.matches),
+                                 goals.away = rep(-1, nr.matches),
+                                 stringsAsFactors=FALSE)
+  
+  for(i in 1:nr.matches){
+    
+    match <- trim_line_sportschau(line = as.character(matches[i]))
+    match <- unlist(str_split(match, ":"))
+    matchday.results[i, "team.home"] <- str_trim(match[1])
+    matchday.results[i, "team.away"] <- str_trim(match[2])
+    
+    result <- trim_line_sportschau(line = as.character(results[i]))
+    result <- unlist(str_split(result, ":"))
+    matchday.results[i, "goals.home"] <- str_trim(result[1])
+    matchday.results[i, "goals.away"] <- str_trim(result[2])
+      
+  }
+  
+  # Formatierungen
+  matchday.results <- matchday.results %>%
+                      mutate(team.home  = replace_character(team.home),
+                             team.away  = replace_character(team.away),
+                             goals.home = ifelse(goals.home == "-",
+                                                 NA, as.integer(goals.home)),
+                             goals.away = ifelse(goals.home == "-",
+                                                 NA, as.integer(goals.away)))
+  
+  return(matchday.results)
+}
+```
+
+Die Funktion `get_league_results` dient der Bequemlichkeit und lädt alle Ergebnisse bis zu einem vorgegebenen Spieltag `played` herunter. Hierbei wird mit der Funktion `Sys.sleep` eine kleine, zufällige Verzögerung eingebaut, um nicht negativ bei Sportschau.de aufzufallen.
+
+```{r}
+get_league_results <- function(league, played, season){
+  
+    league.results <- data.frame(league = rep(league, 500),
+                                 matchday = rep(0, 500),
+                                 season = rep(season, 500),
+                                 team.home = rep("Unknown", 500),
+                                 team.away = rep("Unknown", 500), 
+                                 goals.home = rep(-1, 500),
+                                 goals.away = rep(-1, 500),
+                                 stringsAsFactors=FALSE)
+    j <- 0
+    for(i in 1:played){
+      
+      # Sys.Sleep
+      Sys.sleep(sample(seq(1, 2, by=0.2), 1))
+      
+      # Download Spieltag
+      df <- get_matchday_results(league, i, season)
+      nr.matches <- dim(df)[1]
+      league.results[(j+1):(j+nr.matches), ] <- df
+      j <- j + nr.matches
+    }
+    
+    league.results <- league.results %>%
+                      filter(matchday != 0)
+  
+    return(league.results)
+}
+```
+
+
+## Anwendung
+
+Exemplarisch werden die Ergebnisse der Funktion `get_matchday_results` für verschiedene Liga-Spieltag-Saison-Kombinationen dargestellt.
+
+```{r}
+get_matchday_results("Bundesliga", 8, 2017) %>%
+  knitr::kable()
+```
+
+
+Auch historisches Daten der Bundesliga ab der Saison 2007/2008 können so abgefragt werden.
+```{r}
+get_matchday_results("Bundesliga", 6, 2008) %>%
+  knitr::kable()
+```
+
+Ebenfalls können auch ausländische Ligen heruntergeladen werden.
+```{r}
+get_matchday_results("Premier League", 8, 2017) %>%
+  knitr::kable()
+```
+
+Sollen dagegen nicht nur einzelne Spieltage, sondern alle Ergebnisse bis zu einem Spieltag heruntergeladen werden, so kann die Funktion `get_league_results` zum Einsatz kommen. Mit dem unten stehenden Code werden alle Ergebnisse der Bundesliga Saison 2016/2017 heruntergeladen und anschließend als csv-Datei exportiert.
+
+```{r, eval = FALSE}
+get_league_results("Bundesliga", 34, 2017) %>%
+  write.table("bundesliga-ergebnisse-2017.csv", sep = ';', dec = ',', row.names = FALSE)
+```
+
+
